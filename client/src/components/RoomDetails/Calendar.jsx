@@ -6,6 +6,7 @@ const Calender = ({ value }) => {
       rangeColors={["#F43F5E"]}
       direction="vertical"
       ranges={[value]}
+      minDate={new Date()}
       showDateDisplay={false}
     />
   );

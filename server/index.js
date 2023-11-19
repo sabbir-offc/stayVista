@@ -3,7 +3,7 @@ const app = express()
 require('dotenv').config()
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
-const { MongoClient, ServerApiVersion } = require('mongodb')
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const morgan = require('morgan')
 const port = process.env.PORT || 5000
@@ -45,6 +45,7 @@ const client = new MongoClient(process.env.DB_URI, {
 async function run() {
   try {
     const usersCollection = client.db('stayVista').collection('users')
+    const roomsCollection = client.db('stayVista').collection('rooms')
 
 
     // auth related api
@@ -102,6 +103,42 @@ async function run() {
       )
       res.send(result)
     })
+
+
+    //get all rooms
+    app.get('/rooms', async (req, res) => {
+      const result = await roomsCollection.find().toArray();
+      res.send(result);
+    })
+
+    //get single rooms data
+    app.get('/room/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await roomsCollection.findOne(filter);
+      res.send(result);
+    })
+
+    //get rooms for host;
+    app.get('/rooms/:email', async (req, res) => {
+      try {
+        const email = req.params.email;
+        const filter = { 'host.email': email }
+        const result = await roomsCollection.find(filter).toArray();
+        res.send(result)
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
+
+    //save a room in db
+    app.post('/rooms', verifyToken, async (req, res) => {
+      const room = req.body;
+      const result = await roomsCollection.insertOne(room);
+      res.send(result);
+    })
+
 
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 })

@@ -17,7 +17,6 @@ const RoomReservation = ({ room }) => {
     new Date(room?.to)
   ).split(" ")[0];
   const totalPrice = parseInt(totalDays * room?.price);
-
   return (
     <div className="rounded-xl border-[1px] border-neutral-200 overflow-hidden bg-white">
       <div className="flex items-center gap-1 p-4">
