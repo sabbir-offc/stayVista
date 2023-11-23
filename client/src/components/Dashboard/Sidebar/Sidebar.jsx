@@ -8,13 +8,22 @@ import ToggleBtn from "../../Button/ToggleBtn";
 import { GrLogout } from "react-icons/gr";
 import { FcSettings } from "react-icons/fc";
 import { AiOutlineBars } from "react-icons/ai";
-import { BsFillHouseAddFill, BsGraphUp } from "react-icons/bs";
-import { MdHomeWork } from "react-icons/md";
+
+import useAuth from "../../../hooks/useAuth";
+import useRole from "../../../hooks/useRole";
+import HostMenu from "./HostMenu";
+import GuestMenu from "./GuestMenu";
+import AdminMenu from "./AdminMenu";
+import { BsGraphUp } from "react-icons/bs";
 
 const Sidebar = () => {
+  const { logOut } = useAuth();
   const [toggle, setToggle] = useState(false);
   const [isActive, setActive] = useState(false);
+  //for getting the user role.
+  const { role } = useRole();
 
+  console.log(toggle, role);
   //   For guest/host menu item toggle button
   const toggleHandler = (event) => {
     setToggle(event.target.checked);
@@ -56,20 +65,16 @@ const Sidebar = () => {
           {/* Nav Items */}
           <div className="flex flex-col justify-between flex-1 mt-6">
             {/* If a user is host */}
-            <ToggleBtn toggleHandler={toggleHandler} />
+            {role === "host" && <ToggleBtn toggleHandler={toggleHandler} />}
             <nav>
               {/* Menu Items */}
               <MenuItem icon={BsGraphUp} label="Statistics" address="" />
-              <MenuItem
-                icon={BsFillHouseAddFill}
-                label="Add Room"
-                address="add-room"
-              />
-              <MenuItem
-                icon={MdHomeWork}
-                label="My Listings"
-                address="my-listings"
-              />
+              {/* host menu items */}
+              {role === "host" ? toggle ? <HostMenu /> : <GuestMenu /> : ""}
+              {/* guest menu items */}
+              {role === "guest" && <GuestMenu />}
+              {/* admin menu items */}
+              {role === "admin" && <AdminMenu />}
             </nav>
           </div>
         </div>
@@ -82,7 +87,10 @@ const Sidebar = () => {
             label="Profile"
             address="/dashboard/profile"
           />
-          <button className="flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform">
+          <button
+            onClick={logOut}
+            className="flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform"
+          >
             <GrLogout className="w-5 h-5" />
 
             <span className="mx-4 font-medium">Logout</span>

@@ -1,6 +1,6 @@
 import { DateRange } from "react-date-range";
 import { TbFidgetSpinner } from "react-icons/tb";
-import { categories } from "../../../../public/categoriesData";
+import { categories } from "../../../public/categoriesData";
 const AddRoomForm = ({
   handleSubmit,
   dates,

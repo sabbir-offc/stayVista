@@ -10,6 +10,11 @@ import { getRoom } from "../api/rooms";
 import DashboardLayout from "../layouts/Dashboard";
 import AddRoom from "../pages/Dashboard/Host/AddRoom";
 import MyListings from "../pages/Dashboard/Host/MyListings";
+import HostRoutes from "./HostRoutes";
+import AdminRoutes from "./AdminRoutes";
+import ManageUsers from "../pages/Dashboard/Admin/ManageUsers";
+import Profile from "../pages/Dashboard/Common/Profile";
+import MyBookings from "../pages/Dashboard/Guest/MyBookings";
 
 export const router = createBrowserRouter([
   {
@@ -36,15 +41,57 @@ export const router = createBrowserRouter([
   { path: "/signup", element: <SignUp /> },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoutes>
+        <DashboardLayout />
+      </PrivateRoutes>
+    ),
     children: [
       {
         path: "add-room",
-        element: <AddRoom />,
+        element: (
+          <PrivateRoutes>
+            <HostRoutes>
+              <AddRoom />
+            </HostRoutes>
+          </PrivateRoutes>
+        ),
       },
       {
         path: "my-listings",
-        element: <MyListings />,
+        element: (
+          <PrivateRoutes>
+            <HostRoutes>
+              <MyListings />
+            </HostRoutes>
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "manage-users",
+        element: (
+          <PrivateRoutes>
+            <AdminRoutes>
+              <ManageUsers />
+            </AdminRoutes>
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <PrivateRoutes>
+            <Profile />
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "my-bookings",
+        element: (
+          <PrivateRoutes>
+            <MyBookings />
+          </PrivateRoutes>
+        ),
       },
     ],
   },
